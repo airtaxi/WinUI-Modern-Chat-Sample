@@ -24,7 +24,7 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
 
         var newMessage = new Message
         {
-            Id = Guid.NewGuid().ToString("N"),
+            Id = Guid.NewGuid().ToString("N")[..8],
             ChatId = chatId,
             SenderId = senderId,
             Contents = contents,
@@ -37,7 +37,7 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
             var existingMessage = _messages.FirstOrDefault(x => x.Id == newMessage.Id);
             if (existingMessage == null) break;
 
-            newMessage.Id = Guid.NewGuid().ToString("N");
+            newMessage.Id = Guid.NewGuid().ToString("N")[..8];
         } while (true);
 
         _messages.Add(newMessage);
@@ -52,7 +52,7 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
 
         var newMessage = new Reply
         {
-            Id = Guid.NewGuid().ToString("N"),
+            Id = Guid.NewGuid().ToString("N")[..8],
             ParentMessageId = parentMessageId,
             ChatId = parentMessage.ChatId,
             SenderId = senderId,
@@ -65,7 +65,7 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
         {
             var existingMessage = _messages.FirstOrDefault(x => x.Id == newMessage.Id);
             if (existingMessage == null) break;
-            newMessage.Id = Guid.NewGuid().ToString("N");
+            newMessage.Id = Guid.NewGuid().ToString("N")[..8];
         } while (true);
 
         _messages.Add(newMessage);

@@ -10,6 +10,8 @@ public sealed partial class MainWindow : WindowEx
     {
         InitializeComponent();
 
+        AppWindow.SetIcon("logo.ico");
+
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(MainTitleBar);
 

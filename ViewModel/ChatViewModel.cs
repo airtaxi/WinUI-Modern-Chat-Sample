@@ -27,8 +27,8 @@ public partial class ChatViewModel : ObservableObject
     public ObservableCollection<UserViewModel> ParticipantUserViewModels { get; } = [];
     public ObservableCollection<MessageViewModel> MessageViewModels { get; } = [];
 
-    private InlineCollection _inlineCollection;
-    public List<Inline> Inlines { get; private set; }
+    [ObservableProperty]
+    public partial ObservableCollection<Inline> Inlines { get; private set; }
 
     public ChatViewModel(Chat chat)
     {
@@ -56,8 +56,6 @@ public partial class ChatViewModel : ObservableObject
         if (lastMessage != null) Inlines = GenerateLastMessageInlines(lastMessage);
         else Inlines = [new Run { Text = "새로운 채팅", FontWeight = FontWeights.Bold }]; ;
 
-        ApplyInlines();
-
         WeakReferenceMessenger.Default.Register<NewMessageCreatedMessage>(this, OnNewMessageCreatedMessageReceived);
     }
 
@@ -69,13 +67,11 @@ public partial class ChatViewModel : ObservableObject
         MessageViewModels.Add(messageViewModel);
 
         Inlines = GenerateLastMessageInlines(message.Value);
-
-        ApplyInlines();
     }
 
-    public List<Inline> GenerateLastMessageInlines(Message lastMessage)
+    public ObservableCollection<Inline> GenerateLastMessageInlines(Message lastMessage)
     {
-        var inlines = new List<Inline>();
+        var inlines = new ObservableCollection<Inline>();
 
         var participiants = ParticipantUserViewModels.Select(x => x.User);
         var sender = participiants.FirstOrDefault(x => x.Id == lastMessage.SenderId)
@@ -104,19 +100,5 @@ public partial class ChatViewModel : ObservableObject
         }
 
         return inlines;
-    }
-
-    public void OnTextBlockLoaded(object sender, RoutedEventArgs e)
-    {
-        _inlineCollection = (sender as TextBlock).Inlines;
-        ApplyInlines();
-    }
-
-    private void ApplyInlines()
-    {
-        if (_inlineCollection == null) return;
-
-        _inlineCollection.Clear();
-        foreach (var inline in Inlines) _inlineCollection.Add(inline);
     }
 }

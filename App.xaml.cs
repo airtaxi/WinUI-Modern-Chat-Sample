@@ -45,7 +45,8 @@ public partial class App : Application
         s_serviceProvider = s_services.BuildServiceProvider();
 
         var userService = s_serviceProvider.GetRequiredService<IUserService>();
-        userService.GenerateSampleUsers(30);
+        userService.GenerateSampleUsers(10);
+        Me = userService.AddUser("호원", "이");
 
         var chatService = s_serviceProvider.GetRequiredService<IChatService>();
         chatService.GenerateSampleChats(50);

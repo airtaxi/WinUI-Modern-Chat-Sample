@@ -23,7 +23,7 @@ public class ChatService(IServiceProvider serviceProvider) : IChatService
 
         var newChat = new Chat
         {
-            Id = Guid.NewGuid().ToString("N"),
+            Id = Guid.NewGuid().ToString("N")[..8],
             ParticipantIds = participantIds,
             CreatedAt = DateTime.UtcNow,
         };
@@ -33,7 +33,7 @@ public class ChatService(IServiceProvider serviceProvider) : IChatService
             var existingChat = _chats.FirstOrDefault(x => x.Id == newChat.Id);
             if (existingChat == null) break;
 
-            newChat.Id = Guid.NewGuid().ToString("N");
+            newChat.Id = Guid.NewGuid().ToString("N")[..8];
         } while (true);
 
         _chats.Add(newChat);

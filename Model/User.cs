@@ -15,6 +15,6 @@ public class User
 
     public string FullName => $"{LastName}{FirstName}";
 
-    public string ProfileImageUrl => $"https://picsum.photos/seed/{Id}/256/256";
+    public string ProfileImageUrl => $"https://picsum.photos/seed/{Id}/128/128";
     public string BackgroundImageUrl => $"https://picsum.photos/seed/{Id + "123"}/800/400?blur";
 }

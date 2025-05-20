@@ -13,7 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -31,18 +33,25 @@ public class MessageViewModel
     public UserViewModel Sender { get; private set; }
     public MessageViewModel ParentViewModel { get; private set; }
 
-    private InlineCollection _inlineCollection;
     public ObservableCollection<Inline> Inlines { get; private set; } = [];
     public ObservableCollection<string> AttachmentUris { get; private set; } = [];
 
-    private readonly IEnumerable<MessageViewModel> _parent;
-    private readonly IEnumerable<UserViewModel> _participiantUserViewModels;
+    public Visibility ProfileImageVisibility { get; private set; } = Visibility.Visible;
 
-    public MessageViewModel(Message message, IEnumerable<MessageViewModel> parent, IEnumerable<UserViewModel> participiantUserViewModels)
+    public string ProfileImageUrl => Sender.ProfileImageUrl;
+    public HorizontalAlignment MessageHorizontalAlignment => IsMe ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+    public Visibility NameVisibility => IsMe ? Visibility.Collapsed : Visibility.Visible;
+
+    private readonly IList<MessageViewModel> _parent;
+    private readonly IList<UserViewModel> _participiantUserViewModels;
+    public bool IsMe { get; }
+
+    public MessageViewModel(Message message, IList<MessageViewModel> parent, IList<UserViewModel> participiantUserViewModels)
     {
         Message = message;
         _parent = parent;
         _participiantUserViewModels = participiantUserViewModels;
+        IsMe = message.SenderId == App.Me.Id;
 
         ApplyMessage();
 
@@ -80,6 +89,26 @@ public class MessageViewModel
                 ?? throw new ArgumentException($"Parent message with ID {reply.ParentMessageId} not found in the provided list of view models.");
         }
 
+        if (!IsMe)
+        {
+            MessageViewModel previousViewModel;
+            var doesParentContainThisViewModel = _parent.Any(x => x == this);
+            // This view model is already in the parent list, means it was created before and now we're just updating it
+            if (doesParentContainThisViewModel)
+            {
+                var thisIndex = _parent.IndexOf(this);
+                previousViewModel = thisIndex > 0 ? _parent[thisIndex - 1] : null;
+            }
+            // We're not in the parent list, means this view model just got created will be added to the parent list
+            else previousViewModel = _parent.LastOrDefault();
+
+            // If previous view model's sender is the same as this view model's sender, hide the previous view model's profile image
+            if (previousViewModel != null && previousViewModel.Message.SenderId == Message.SenderId) previousViewModel.ProfileImageVisibility = Visibility.Collapsed;
+            else if (previousViewModel != null && !previousViewModel.IsMe) previousViewModel.ProfileImageVisibility = Visibility.Visible;
+        }
+        else ProfileImageVisibility = Visibility.Collapsed; // Hide profile image for sender
+
+        Inlines.Clear();
         foreach (var content in Message.Contents)
         {
             if (content is TextMessageContent text) Inlines.Add(new Run { Text = text.Text });
@@ -110,21 +139,5 @@ public class MessageViewModel
                 FontSize = 12,
             });
         }
-
-        ApplyInlines();
-    }
-
-    public void OnTextBlockLoaded(object sender, RoutedEventArgs e)
-    {
-        _inlineCollection = (sender as TextBlock).Inlines;
-        ApplyInlines();
-    }
-
-    private void ApplyInlines()
-    {
-        if (_inlineCollection == null) return;
-
-        _inlineCollection.Clear();
-        foreach (var inline in Inlines) _inlineCollection.Add(inline);
     }
 }

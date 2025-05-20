@@ -22,7 +22,7 @@ public class AttachmentService : IAttachmentService
 
         var newAttachment = new Attachment
         {
-            Id = Guid.NewGuid().ToString("N"),
+            Id = Guid.NewGuid().ToString("N")[..8],
             Uri = uri,
             CreatedAt = DateTime.UtcNow,
         };
@@ -32,7 +32,7 @@ public class AttachmentService : IAttachmentService
             var existingAttachment = _attachments.FirstOrDefault(x => x.Id == newAttachment.Id);
             if (existingAttachment == null) break;
 
-            newAttachment.Id = Guid.NewGuid().ToString("N");
+            newAttachment.Id = Guid.NewGuid().ToString("N")[..8];
         } while (true);
 
         _attachments.Add(newAttachment);
@@ -75,7 +75,7 @@ public class AttachmentService : IAttachmentService
         {
             for (int i = 1; i <= numberOfAttachments; i++)
             {
-                var seed = Guid.NewGuid().ToString("N");
+                var seed = Guid.NewGuid().ToString("N")[..8];
                 var width = Random.Shared.Next(384, 640);
                 var height = Random.Shared.Next(384, 640);
 

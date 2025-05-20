@@ -1,3 +1,4 @@
+using BMW_20250523.Model;
 using BMW_20250523.Service.Interface;
 using BMW_20250523.ViewModel;
 using CommunityToolkit.WinUI.Controls;
@@ -40,4 +41,13 @@ public sealed partial class MainPage : Page
 
     private void OnGridSplitterPointerPressed(object sender, PointerRoutedEventArgs e) => (sender as UIElement).CapturePointer(e.Pointer);
     private void OnGridSplitterPointerReleased(object sender, PointerRoutedEventArgs e) => (sender as UIElement).ReleasePointerCapture(e.Pointer);
+
+    private void OnChatListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var listView = sender as ListView;
+        if (listView == null) return;
+
+        var viewModel = listView.SelectedItem as ChatViewModel;
+        ContentFrame.Navigate(typeof(ChatPage), viewModel.Chat);
+    }
 }

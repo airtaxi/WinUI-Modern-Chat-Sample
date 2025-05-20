@@ -1,3 +1,5 @@
+using BMW_20250523.Model;
+using BMW_20250523.ViewModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -20,5 +22,13 @@ public sealed partial class ChatPage : Page
     public ChatPage()
     {
         InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        var chat = e.Parameter as Chat;
+        var viewModel = new ChatViewModel(chat);
+        MessageItemsRepeater.ItemsSource = viewModel.MessageViewModels;
     }
 }
