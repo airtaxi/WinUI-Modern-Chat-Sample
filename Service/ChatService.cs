@@ -54,7 +54,7 @@ public class ChatService(IServiceProvider serviceProvider) : IChatService
             .Select(g => g.OrderByDescending(x => x.CreatedAt).FirstOrDefault())
             .ToList();
 
-        return _chats.OrderByDescending(chat => latestMessages.FirstOrDefault(m => m.ChatId == chat.Id)?.CreatedAt ?? chat.CreatedAt).ToList();
+        return [.. _chats.OrderByDescending(chat => latestMessages.FirstOrDefault(m => m.ChatId == chat.Id)?.CreatedAt ?? chat.CreatedAt)];
     }
 
     public List<Chat> GetChatsByIds(List<string> chatIds)

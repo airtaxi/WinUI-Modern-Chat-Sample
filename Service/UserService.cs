@@ -44,12 +44,12 @@ public class UserService : IUserService
     public User GetUser(string userId) => _users.FirstOrDefault(x => x.Id == userId)
         ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
 
-    public List<User> GetAllUsers() => _users.ToList();
+    public List<User> GetAllUsers() => [.. _users];
 
     public List<User> GetUsersByIds(List<string> userIds)
     {
-        if (userIds == null || userIds.Count == 0) return _users.ToList();
-        return _users.Where(x => userIds.Contains(x.Id)).ToList();
+        if (userIds == null || userIds.Count == 0) return [.. _users];
+        return [.. _users.Where(x => userIds.Contains(x.Id))];
     }
 
     // Update: ReplaceUser

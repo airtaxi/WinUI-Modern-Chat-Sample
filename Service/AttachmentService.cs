@@ -44,12 +44,12 @@ public class AttachmentService : IAttachmentService
     public Attachment GetAttachment(string attachmentId) => _attachments.FirstOrDefault(x => x.Id == attachmentId)
         ?? throw new KeyNotFoundException($"Attachment with ID {attachmentId} not found.");
 
-    public List<Attachment> GetAllAttachments() => _attachments.ToList();
+    public List<Attachment> GetAllAttachments() => [.. _attachments];
 
     public List<Attachment> GetAttachmentsByIds(List<string> attachmentIds)
     {
-        if (attachmentIds == null || attachmentIds.Count == 0) return _attachments.ToList();
-        return _attachments.Where(x => attachmentIds.Contains(x.Id)).ToList();
+        if (attachmentIds == null || attachmentIds.Count == 0) return [.. _attachments];
+        return [.. _attachments.Where(x => attachmentIds.Contains(x.Id))];
     }
 
     // Update: ReplaceAttachment
