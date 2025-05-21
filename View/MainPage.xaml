@@ -77,6 +77,7 @@
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 app:TextBlockHelper.BindableInlines="{x:Bind Inlines, Mode=OneWay}"
+                                MaxLines="1"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>
                     </DataTemplate>

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -41,6 +42,9 @@ public class MessageViewModel
     public string ProfileImageUrl => Sender.ProfileImageUrl;
     public HorizontalAlignment MessageHorizontalAlignment => IsMe ? HorizontalAlignment.Right : HorizontalAlignment.Left;
     public Visibility NameVisibility => IsMe ? Visibility.Collapsed : Visibility.Visible;
+    public string Timestamp => Message.CreatedAt.AddHours(9).ToString("tt h:mm", new CultureInfo("ko-KR"));
+    public Visibility LeftTimeVisibility => IsMe ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility RightTimeVisibility => IsMe ? Visibility.Collapsed : Visibility.Visible;
 
     private readonly IList<MessageViewModel> _parent;
     private readonly IList<UserViewModel> _participiantUserViewModels;

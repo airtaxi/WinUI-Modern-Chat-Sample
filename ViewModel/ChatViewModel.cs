@@ -53,7 +53,7 @@ public partial class ChatViewModel : ObservableObject
         }
 
         var lastMessage = messages.LastOrDefault();
-        if (lastMessage != null) Inlines = GenerateLastMessageInlines(lastMessage);
+        if (lastMessage != null) Inlines = GenerateInlines(lastMessage);
         else Inlines = [new Run { Text = "새로운 채팅", FontWeight = FontWeights.Bold }]; ;
 
         WeakReferenceMessenger.Default.Register<NewMessageCreatedMessage>(this, OnNewMessageCreatedMessageReceived);
@@ -66,10 +66,10 @@ public partial class ChatViewModel : ObservableObject
         var messageViewModel = new MessageViewModel(message.Value, MessageViewModels, ParticipantUserViewModels);
         MessageViewModels.Add(messageViewModel);
 
-        Inlines = GenerateLastMessageInlines(message.Value);
+        Inlines = GenerateInlines(message.Value);
     }
 
-    public ObservableCollection<Inline> GenerateLastMessageInlines(Message lastMessage)
+    public ObservableCollection<Inline> GenerateInlines(Message lastMessage)
     {
         var inlines = new ObservableCollection<Inline>();
 

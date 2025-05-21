@@ -22,6 +22,8 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
         if (string.IsNullOrWhiteSpace(senderId) || contents == null || contents.Count == 0)
             throw new ArgumentException("Sender ID and content IDs cannot be null or empty.");
 
+        attachmentIds ??= [];
+
         var newMessage = new Message
         {
             Id = Guid.NewGuid().ToString("N")[..8],
@@ -120,7 +122,7 @@ public class MessageService(IServiceProvider serviceProvider) : IMessageService
     {
         var attachmentService = serviceProvider.GetRequiredService<IAttachmentService>();
 
-        var lastChatTime = DateTime.Now.AddMinutes(-5);
+        var lastChatTime = DateTime.Now.AddMinutes(-5).AddHours(-9);
         var today = DateTime.Now.Date;
         var gap = (lastChatTime - today);
 

@@ -8,5 +8,5 @@ namespace BMW_20250523.Model.MessageContent;
 
 public class TextMessageContent : IMessageContent
 {
-    public string Text { get; init; }
+    public string Text { get; set; }
 }

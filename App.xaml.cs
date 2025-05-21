@@ -49,7 +49,15 @@ public partial class App : Application
         Me = userService.AddUser("호원", "이");
 
         var chatService = s_serviceProvider.GetRequiredService<IChatService>();
-        chatService.GenerateSampleChats(50);
+        var chats = chatService.GenerateSampleChats(50);
+        foreach(var chat in chats)
+        {
+            if (!chat.ParticipantIds.Contains(Me.Id))
+            {
+                // Add the current user to the chat participants if not already present
+                chat.ParticipantIds.Add(Me.Id);
+            }
+        }
     }
 
 

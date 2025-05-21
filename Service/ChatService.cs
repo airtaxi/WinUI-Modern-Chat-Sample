@@ -88,14 +88,14 @@ public class ChatService(IServiceProvider serviceProvider) : IChatService
 
         for (int i = 0; i < numberOfChats; i++)
         {
-            var participantCount = Random.Shared.Next(2, 10);
+            var participantCount = Random.Shared.Next(4, 20);
             var participants = userService.GetRandomUsers(participantCount);
             var participantIds = participants.Select(x => x.Id).ToList();
 
             var chat = AddChat(participantIds);
             chats.Add(chat);
 
-            var numberOfMessages = Random.Shared.Next(10, 100);
+            var numberOfMessages = Random.Shared.Next(30, 100);
             messagesService.GenerateSampleMessages(chat.Id, numberOfMessages, participantIds);
         }
 
